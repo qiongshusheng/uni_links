@@ -66,13 +66,17 @@ static id _instance;
     continueUserActivity:(NSUserActivity *)userActivity
       restorationHandler:(void (^)(NSArray *_Nullable))restorationHandler {
   if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-    self.latestLink = [userActivity.webpageURL absoluteString];
+    NSString *path =  [userActivity.webpageURL absoluteString];
+    if ([path hasPrefix:@"https://apple.aizao.com"]) {
+      return NO;
+    }
+    self.latestLink = path;
     if (!_eventSink) {
       self.initialLink = self.latestLink;
     }
     return YES;
   }
-  return YES;
+  return NO;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
